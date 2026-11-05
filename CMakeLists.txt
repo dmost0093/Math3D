@@ -26,11 +26,16 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 option(MATH3D_BUILD_TESTS "Math3D 단위 테스트 빌드" ${PROJECT_IS_TOP_LEVEL})
 option(MATH3D_ENABLE_ASAN "AddressSanitizer 활성화" OFF)
 
-# MSVC: ASan과 /RTC1은 동시에 못 씀 → Debug 플래그에서 제거
-if(MSVC AND MATH3D_ENABLE_ASAN)
-    string(REPLACE "/RTC1" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
+# ASan은 전역으로 적용 → FetchContent로 받는 Catch2도 같이 ASan으로 빌드됨
+# (MSVC는 ASan 켠 코드와 안 켠 코드를 섞어 링크하면 LNK2038 에러를 냄)
+if(MATH3D_ENABLE_ASAN)
+    if(MSVC)
+        add_compile_options(/fsanitize=address /Zi)
+    else()
+        add_compile_options(-fsanitize=address -fno-omit-frame-pointer)
+        add_link_options(-fsanitize=address)
+    endif()
 endif()
-
 # ============================================================
 # 4) 공통 타깃 설정 함수 (경고 + 새니타이저)
 # ============================================================

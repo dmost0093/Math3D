@@ -53,3 +53,37 @@ TEST_CASE("normalize 결과의 길이는 1", "[vec3]") {
     // sqrt를 거치면 오차가 생기니 == 대신 허용 오차로 비교
     REQUIRE_THAT(math3d::length(math3d::normalize({3, 4, 12})), WithinAbs(1.0f, 1e-6f));
 }
+
+TEST_CASE("복합 대입 연산자", "[vec3]") {
+    Vec3 v{1, 2, 3};
+
+    v += Vec3{1, 1, 1}; // {2, 3, 4}
+    REQUIRE(v.x == 2.0f);
+    REQUIRE(v.y == 3.0f); // 예전 v += v.y 같은 버그를 여기서 잡음
+    REQUIRE(v.z == 4.0f);
+
+    v -= Vec3{1, 1, 1}; // {1, 2, 3}
+    REQUIRE(v.y == 2.0f);
+
+    v *= 2.0f; // {2, 4, 6}
+    REQUIRE(v.z == 6.0f);
+
+    v /= 2.0f; // {1, 2, 3}
+    REQUIRE(v.x == 1.0f);
+}
+
+TEST_CASE("단항 마이너스와 스칼라 나눗셈", "[vec3]") {
+    Vec3 n = -Vec3{1, -2, 3};
+    REQUIRE(n.x == -1.0f);
+    REQUIRE(n.y == 2.0f);
+    REQUIRE(n.z == -3.0f);
+
+    Vec3 d = Vec3{2, 4, 6} / 2.0f;
+    REQUIRE(d.y == 2.0f);
+}
+
+TEST_CASE("lengthSquared는 length의 제곱", "[vec3]") {
+    Vec3 v{3, 4, 12}; // 길이 13 (3-4-5, 5-12-13 피타고라스 수)
+    REQUIRE(math3d::lengthSquared(v) == 169.0f);
+    REQUIRE(math3d::length(v) == 13.0f);
+}
