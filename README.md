@@ -55,7 +55,7 @@ Tests are built only when Math3D is the top-level project, so consumers don't pu
 
 ## Roadmap
 
-- [x] Vec3 basics (+, -, scalar multiply, dot, cross, length, normalize)
+- [ ] Vec3 basics (+, -, scalar multiply, dot, cross, length, normalize)
 - [ ] Remaining Vec3 operations
 - [ ] Coordinate space transforms (Ch. 3)
 - [ ] Mat3 / Mat4 (Ch. 4–6)
